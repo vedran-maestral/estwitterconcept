@@ -21,15 +21,15 @@ var path = require("path"),
     app = express();
 
 var twitterAPI = require('node-twitter-api');
+var Twitter = require('twitter');
 
-
+/*
 var twitter = new twitterAPI({
-    consumerKey: 'yus5ONX0AcoRCTsUnTwiCEDLX',
-    consumerSecret: 'CZi0pJqwQUkUEk7jJSgTfDtTcCWs9i8dwLIioamVQlrCuL2qC2',
+    consumerKey: '',
+    consumerSecret: '',
     callback: 'http://yoururl.tld/something'
 });
-
-
+*/
 
 app.configure('production', function () {
     var oneYear = 0;         //31557600000
@@ -40,33 +40,32 @@ app.configure('production', function () {
     app.use(express.methodOverride());
     app.use(express.static(__dirname + './../', { maxAge: oneYear }));
 
-
     app.get('/gettweet', function (req, res) {
+        var client = new Twitter({
+            consumer_key: '',
+            consumer_secret: '',
+            access_token_key: '-',
+            access_token_secret: ''
+        });
 
-        twitter.getRequestToken(function(error, requestToken, requestTokenSecret, results){
-            if (error) {
-                console.log("Error getting OAuth request token : " + error);
-            } else {
-                //store token and tokenSecret somewhere, you'll need them later; redirect user
+        //Tweeter reference --> https://dev.twitter.com/rest/reference/get/search/tweets
+        var params = {q: 'Breza'};
+        var paramsExtended = {
+            q: 'breza',
+            count: 50
+        };
+
+        client.get('search/tweets', paramsExtended, function(error, tweets, response){
+            if (!error) {
+                console.log(tweets);
             }
         });
 
-
-
-
-
-
-
-
-
-
+//search/tweets
+//statuses/user_timeline
 
 
         console.log("I am in search twitter Posts")
     })
-
-
-
-
 });
 app.listen(80);
